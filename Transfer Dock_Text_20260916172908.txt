@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>CREATORADDAIN • KISMAT KA KHAJANA</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ font-family:Arial,Helvetica,sans-serif;
+ background:#070a12;color:#fff;min-height:100vh
+}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+
+.nav{
+ position:sticky;top:0;z-index:1000;
+ background:#0d1220ee;backdrop-filter:blur(12px);
+ border-bottom:1px solid #20283a
+}
+.navin{
+ max-width:1150px;margin:auto;padding:14px 16px;
+ display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.logo{font-size:20px;font-weight:900}
+.logo span{color:#7c5cff}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap}
+.navlinks button,.btn{
+ border:0;border-radius:11px;padding:11px 15px;
+ background:#7c5cff;color:#fff;font-weight:800
+}
+.navlinks button{background:#111827;border:1px solid #293149}
+.navlinks button:hover{background:#7c5cff}
+
+.container{max-width:1150px;margin:auto;padding:20px 15px}
+
+.hero{
+ min-height:330px;border:1px solid #222b40;border-radius:22px;
+ padding:45px 25px;display:flex;align-items:center;
+ background:radial-gradient(circle at 80% 20%,#35256f55,transparent 40%),
+ linear-gradient(135deg,#111827,#080b14)
+}
+.hero h1{font-size:clamp(34px,7vw,70px);line-height:1.02}
+.hero h1 span{color:#8d72ff}
+.hero p{color:#aeb8ca;margin:18px 0;font-size:17px}
+
+.section{margin-top:25px}
+.section h2{margin-bottom:13px}
+.muted{color:#98a3b7}
+
+.socials,.resource-grid,.ai-grid,.games-grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px
+}
+.card,.social,.game-card{
+ background:#101624;border:1px solid #232d43;border-radius:16px;padding:16px
+}
+.social{text-align:center}
+.social:hover,.game-card:hover{border-color:#7c5cff}
+
+.ad{
+ min-height:90px;border:1px dashed #38435d;border-radius:15px;
+ display:flex;align-items:center;justify-content:center;
+ color:#69758c;margin:18px 0
+}
+
+.account{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.balance{font-size:34px;font-weight:900;color:#62e6a5}
+
+.game-card{
+ position:relative;overflow:hidden;
+ background:linear-gradient(145deg,#11192a,#0c111d)
+}
+.game-card h3{margin:8px 0}
+.game-icon{font-size:40px}
+.game-card p{font-size:13px;color:#929eb4;min-height:38px}
+.game-card button{width:100%;margin-top:12px}
+
+.badge{
+ display:inline-block;padding:5px 8px;border-radius:20px;
+ background:#202b43;color:#aebcff;font-size:11px
+}
+
+.profile{
+ display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center
+}
+.avatar{
+ width:100px;height:100px;border-radius:50%;background:#202a42;
+ display:flex;align-items:center;justify-content:center;
+ font-size:42px;border:2px solid #7c5cff
+}
+
+.modal,.play{
+ position:fixed;inset:0;z-index:3000;
+ background:#000c;display:none;align-items:center;justify-content:center;padding:15px
+}
+.modal.show{display:flex}
+.modalbox{
+ width:min(430px,100%);background:#0e1421;
+ border:1px solid #29344b;border-radius:20px;padding:22px
+}
+.input{
+ width:100%;padding:13px;margin:7px 0;background:#080c15;
+ color:white;border:1px solid #2c3850;border-radius:10px
+}
+.modal-actions{display:flex;gap:8px;margin-top:10px}
+.modal-actions button{flex:1}
+
+.play{z-index:2000;align-items:stretch;justify-content:initial}
+.play.show{display:block}
+.playhead{
+ position:sticky;top:0;background:#0d1320ee;z-index:10;
+ border-bottom:1px solid #202b41;padding:13px 15px;
+ display:flex;align-items:center;justify-content:space-between
+}
+.playbody{max-width:850px;margin:auto;padding:18px 15px}
+.gamebox{
+ background:#0e1523;border:1px solid #29344b;border-radius:20px;
+ padding:20px;min-height:350px
+}
+.game-title{text-align:center;margin-bottom:20px}
+.center{text-align:center}
+.big-number{font-size:70px;font-weight:900}
+
+.choice-grid{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:12px
+}
+.choice{
+ min-height:70px;background:#182238;border:1px solid #33405d;
+ color:#fff;border-radius:14px;padding:12px;font-weight:700
+}
+.choice:hover{background:#263454}
+
+.wheel{
+ width:min(280px,80vw);height:min(280px,80vw);
+ border-radius:50%;margin:20px auto;
+ border:10px solid #28334a;
+ background:conic-gradient(
+ #7c5cff 0 25%,#16a085 25% 50%,
+ #f39c12 50% 75%,#e74c3c 75% 100%
+ );
+ display:flex;align-items:center;justify-content:center;
+ transition:transform 3s cubic-bezier(.15,.75,.25,1)
+}
+.wheel span{
+ width:80px;height:80px;border-radius:50%;background:#080b14;
+ display:flex;align-items:center;justify-content:center;
+ font-size:14px;font-weight:bold
+}
+
+.track{
+ height:55px;background:#111a2b;border-radius:30px;
+ margin:25px 0;position:relative;border:1px solid #2d3850
+}
+.car{
+ position:absolute;left:0;top:8px;font-size:35px;
+ transition:left .15s linear
+}
+
+.build-grid{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:8px
+}
+.build-item{
+ background:#182238;border:1px solid #2d3a54;
+ border-radius:10px;padding:13px;text-align:center
+}
+.build-area{
+ min-height:170px;margin-top:15px;border:2px dashed #39465e;
+ border-radius:15px;padding:12px;display:flex;flex-wrap:wrap;gap:8px
+}
+.item{background:#252f45;border-radius:8px;padding:8px}
+
+.memory{
+ display:grid;grid-template-columns:repeat(4,1fr);
+ gap:9px;max-width:500px;margin:auto
+}
+.mem{
+ aspect-ratio:1;background:#202b40;border:0;border-radius:10px;
+ color:transparent;font-size:25px
+}
+.mem.open{color:white;background:#394b70}
+
+.history-row{
+ display:flex;justify-content:space-between;
+ padding:10px 0;border-bottom:1px solid #222c40;font-size:14px
+}
+
+.result{
+ padding:18px;border-radius:15px;background:#111a2b;
+ border:1px solid #2d3850;margin:15px 0;text-align:center
+}
+
+.toast{
+ position:fixed;bottom:20px;left:50%;
+ transform:translateX(-50%);
+ background:#151d2d;border:1px solid #35425c;
+ padding:12px 18px;border-radius:12px;
+ z-index:5000;display:none
+}
+.toast.show{display:block}
+
+@media(max-width:650px){
+ .navlinks{display:none}
+ .account{grid-template-columns:1fr}
+ .profile{grid-template-columns:80px 1fr}
+ .avatar{width:75px;height:75px;font-size:30px}
+ .build-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+<div class="navin">
+<div class="logo">CREATOR<span>ADDAIN</span></div>
+
+<div class="navlinks">
+<button onclick="go('home')">Home</button>
+<button onclick="go('resources')">Resources</button>
+<button onclick="go('games')">Games</button>
+<button onclick="go('profile')">Profile</button>
+</div>
+
+<button class="btn" id="authBtn" onclick="openAuth()">LOGIN</button>
+</div>
+</nav>
+
+<main class="container">
+
+<section id="home">
+<div class="hero">
+<div>
+<span class="badge">CREATORADDAIN</span>
+<h1>WELCOME TO MY<br><span>DIGITAL WORLD</span></h1>
+<p>CREATE. EDIT. INSPIRE.</p>
+<button class="btn" onclick="go('games')">🎮 KISMAT KA KHAJANA</button>
+</div>
+</div>
+
+<div class="ad">ADVERTISEMENT</div>
+
+<div class="section">
+<h2>Social Platforms</h2>
+<div class="socials">
+<a class="social" href="https://youtube.com/@1_lyrics_zone" target="_blank">▶️ YouTube</a>
+<a class="social" href="https://www.instagram.com/1_lyrics_zone/" target="_blank">📸 Instagram</a>
+<a class="social" href="https://t.me/+N56CK58W-183NzZl" target="_blank">✈️ Telegram</a>
+<a class="social" href="https://www.facebook.com/share/19e1Eog2xE/" target="_blank">📘 Facebook</a>
+<a class="social" href="https://mojapp.in/@1lyricszone" target="_blank">🎬 Moj</a>
+<a class="social" href="https://s.trendo.vip/ZkNg" target="_blank">🔥 Trendo</a>
+<a class="social" href="https://www.snapchat.com/add/s.glyricsvideo" target="_blank">👻 Snapchat</a>
+<a class="social" href="https://sharechat.com/profile/s8707447946" target="_blank">💬 ShareChat</a>
+</div>
+</div>
+</section>
+
+<section id="resources" class="section">
+<h2>✂️ Editing Resources</h2>
+
+<div class="resource-grid">
+<a class="card" target="_blank" href="https://drive.google.com/drive/folders/1q_eAC1BfIo5rMSWNIkINwXgIyIP5DSXc">
+📦 Alight Motion XML<br>
+<small class="muted">Presets & Effects</small>
+</a>
+
+<a class="card" target="_blank" href="https://drive.google.com/drive/folders/1A_ibaOEMfSYiNLiaRFKcFOy9NqpI6LpW">
+🔤 Fonts<br>
+<small class="muted">Font Collection</small>
+</a>
+
+<div class="card">✨ Effects<br><small class="muted">Editing Resources</small></div>
+<div class="card">🎞️ Presets<br><small class="muted">Creator Tools</small></div>
+</div>
+
+<div class="ad">ADVERTISEMENT</div>
+
+<h2>🤖 AI Tools</h2>
+<div class="ai-grid">
+<div class="card">🎥 AI Video</div>
+<div class="card">🖼️ AI Image</div>
+<div class="card">🎙️ AI Voice</div>
+<div class="card">✂️ Background Remover</div>
+</div>
+</section>
+
+<section id="account" class="section">
+<h2>👤 Player Account</h2>
+
+<div class="account">
+<div class="card">
+<div class="muted">Wallet Balance</div>
+<div class="balance">₹<span id="balance">--</span></div>
+<br>
+<button class="btn" onclick="showMessage('Deposit API integration required.')">DEPOSIT</button>
+<button class="btn" onclick="showMessage('Withdrawal API integration required.')">WITHDRAW</button>
+</div>
+
+<div class="card">
+<div class="muted">Player Center</div><br>
+<button class="btn" onclick="go('profile')">Profile</button>
+<button class="btn" onclick="showMessage('Leaderboard coming next.')">Leaderboard</button>
+<button class="btn" onclick="showMessage('Current Season: S1')">Season</button>
+<button class="btn" onclick="showMessage('Daily Login coming next.')">Daily Login</button>
+<button class="btn" onclick="showMessage('Referral coming next.')">Referral</button>
+<button class="btn" onclick="go('history')">History</button>
+</div>
+</div>
+</section>
+
+<section id="games" class="section">
+<h2>🎮 KISMAT KA KHAJANA</h2>
+<p class="muted">Choose a game and press PLAY NOW.</p>
+<div class="games-grid" id="gamesGrid"></div>
+</section>
+
+<section id="profile" class="section">
+<h2>👤 Public Profile</h2>
+
+<div class="card profile">
+<div class="avatar" id="avatar">👤</div>
+
+<div>
+<h2 id="profileName">Guest Player</h2>
+<span class="badge">Level 1</span>
+<p class="muted">Season Ranking: —</p>
+<p class="muted">Games Played: <span id="gamesPlayed">0</span></p>
+<p class="muted">Win Streak: <span id="winStreak">0</span></p>
+</div>
+</div>
+</section>
+
+<section id="history" class="section">
+<h2>📜 Game History</h2>
+<div class="card" id="historyList">
+<p class="muted">No games played yet.</p>
+</div>
+</section>
+
+</main>
+
+<div class="modal" id="authModal">
+<div class="modalbox">
+<h2>Login / Sign Up</h2>
+
+<input id="username" class="input" placeholder="Username">
+<input id="phone" class="input" inputmode="numeric" maxlength="10" placeholder="10 digit mobile number">
+
+<p class="muted" style="margin:8px 0">
+OTP authentication required.
+</p>
+
+<button class="btn" style="width:100%" onclick="demoLogin()">CONTINUE</button>
+<button class="btn" style="width:100%;margin-top:8px;background:#182034" onclick="closeAuth()">CLOSE</button>
+</div>
+</div>
+
+<div class="play" id="playScreen">
+<div class="playhead">
+<strong id="playTitle">Game</strong>
+<button class="btn" onclick="exitGame()">✕ EXIT</button>
+</div>
+
+<div class="playbody">
+<div class="gamebox" id="gameArea"></div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const state={
+ user:null,
+ gamesPlayed:0,
+ winStreak:0,
+ history:[],
+ currentGame:null
+};
+
+const games=[
+{id:1,icon:"🎡",name:"Lucky Wheel",desc:"Spin the wheel and test your luck.",fn:"wheel"},
+{id:2,icon:"🧠",name:"Question Master",desc:"Answer knowledge questions.",fn:"quiz"},
+{id:3,icon:"🏠",name:"Build Your Home",desc:"Build your creative home.",fn:"build"},
+{id:4,icon:"🏎️",name:"Car Race",desc:"Drive and avoid obstacles.",fn:"race"},
+{id:5,icon:"🐔",name:"Chicken Road",desc:"Cross the road safely.",fn:"chicken"},
+{id:6,icon:"🔢",name:"Number Battle",desc:"Choose the winning number.",fn:"number"},
+{id:7,icon:"⚡",name:"Fast Tap Challenge",desc:"Tap as fast as possible.",fn:"tap"},
+{id:8,icon:"📅",name:"Daily Challenges",desc:"Complete daily challenges.",fn:"daily"},
+{id:9,icon:"📦",name:"Treasure Box",desc:"Choose a hidden treasure.",fn:"treasure"},
+{id:10,icon:"🃏",name:"Lucky Cards",desc:"Pick a hidden card.",fn:"cards"},
+{id:11,icon:"✈️",name:"Aviator Flying",desc:"Timing-based flight game.",fn:"aviator"},
+{id:12,icon:"🔄",name:"Spin",desc:"Spin and reveal a result.",fn:"spin"},
+{id:13,icon:"🦘",name:"Jump Jump",desc:"Jump over obstacles.",fn:"jump"},
+{id:14,icon:"🐦",name:"Save the Bird",desc:"Help the bird survive.",fn:"bird"},
+{id:15,icon:"🌳",name:"Garden",desc:"Grow your virtual garden.",fn:"garden"},
+{id:16,icon:"🏡",name:"Buy / Sell Home",desc:"Manage virtual properties.",fn:"property"},
+{id:17,icon:"🧩",name:"Memory Master",desc:"Match hidden pairs.",fn:"memory"},
+{id:18,icon:"📚",name:"Knowledge Quiz",desc:"General knowledge challenge.",fn:"knowledge"},
+{id:19,icon:"🎯",name:"Perfect Aim",desc:"Hit the target.",fn:"aim"},
+{id:20,icon:"🏃",name:"Runner Challenge",desc:"Run and survive.",fn:"runner"},
+{id:21,icon:"🪙",name:"Coin Catcher",desc:"Catch falling coins.",fn:"coins"},
+{id:22,icon:"🚂",name:"Train Escape",desc:"Escape the train.",fn:"train"},
+{id:23,icon:"🏝️",name:"Island Survival",desc:"Survive the island.",fn:"island"},
+{id:24,icon:"🥊",name:"Boxing Reflex",desc:"React quickly.",fn:"boxing"},
+{id:25,icon:"🧠",name:"Memory Master Pro",desc:"Advanced memory challenge.",fn:"memoryPro"}
+];
+
+function $(id){
+ return document.getElementById(id);
+}
+
+function save(){
+ try{
+  localStorage.setItem("creatoraddain_state",JSON.stringify({
+   user:state.user,
+   gamesPlayed:state.gamesPlayed,
+   winStreak:state.winStreak,
+   history:state.history
+  }));
+ }catch(e){}
+}
+
+function purgeLegacyDemo(){
+ try{
+  localStorage.removeItem("creatoraddain_state");
+ }catch(e){}
+}
+
+function load(){
+ try{
+  const x=JSON.parse(localStorage.getItem("creatoraddain_state"));
+  if(x){
+   delete x.balance;
+   Object.assign(state,x);
+  }
+ }catch(e){}
+
+ updateUI();
+ renderGames();
+}
+
+function updateUI(){
+ $("balance").textContent = state.user ? "0.00" : "--";
+ $("gamesPlayed").textContent=state.gamesPlayed;
+ $("winStreak").textContent=state.winStreak;
+
+ if(state.user){
+  $("authBtn").textContent="LOGOUT";
+  $("profileName").textContent=state.user.name;
+  $("avatar").textContent=(state.user.name||"P").charAt(0).toUpperCase();
+ }else{
+  $("authBtn").textContent="LOGIN";
+  $("profileName").textContent="Guest Player";
+  $("avatar").textContent="👤";
+ }
+
+ renderHistory();
+}
+
+function showMessage(msg){
+ const t=$("toast");
+ t.textContent=msg;
+ t.classList.add("show");
+
+ setTimeout(()=>{
+  t.classList.remove("show");
+ },2200);
+}
+
+function go(id){
+ const el=$(id);
+ if(el)el.scrollIntoView({behavior:"smooth"});
+}
+
+function openAuth(){
+ if(state.user){
+  state.user=null;
+  save();
+  updateUI();
+  showMessage("Logged out.");
+  return;
+ }
+
+ $("authModal").classList.add("show");
+}
+
+function closeAuth(){
+ $("authModal").classList.remove("show");
+}
+
+function demoLogin(){
+ const name=$("username").value.trim()||"Player";
+
+ state.user={
+  name:name,
+  level:1
+ };
+
+ save();
+ updateUI();
+ closeAuth();
+ showMessage("Login successful.");
+}
+
+function renderGames(){
+ $("gamesGrid").innerHTML=games.map(g=>`
+  <div class="game-card">
+   <div class="game-icon">${g.icon}</div>
+   <h3>${g.name}</h3>
+   <p>${g.desc}</p>
+   <span class="badge">GAME ${g.id}</span>
+   <button class="btn" onclick="startGame(${g.id})">
+    PLAY NOW
+   </button>
+  </div>
+ `).join("");
+}
+
+function startGame(id){
+ const g=games.find(x=>x.id===id);
+
+ if(!g)return;
+
+ if(!state.user){
+  showMessage("Pehle LOGIN karo.");
+  openAuth();
+  return;
+ }
+
+ state.currentGame=g;
+ $("playTitle").textContent=g.icon+" "+g.name;
+ $("playScreen").classList.add("show");
+
+ renderGame(g.fn);
+}
+
+function exitGame(){
+ $("playScreen").classList.remove("show");
+ $("gameArea").innerHTML="";
+ state.currentGame=null;
+}
+
+function finishGame(result,reason){
+ state.gamesPlayed++;
+
+ if(result==="win"){
+  state.winStreak++;
+ }else{
+  state.winStreak=0;
+ }
+
+ state.history.unshift({
+  game:state.currentGame?state.currentGame.name:"Game",
+  result:result,
+  reason:reason,
+  time:new Date().toLocaleString()
+ });
+
+ if(state.history.length>50){
+  state.history.length=50;
+ }
+
+ save();
+ updateUI();
+}
+
+function renderHistory(){
+ const box=$("historyList");
+
+ if(!state.history.length){
+  box.innerHTML='<p class="muted">No games played yet.</p>';
+  return;
+ }
+
+ box.innerHTML=state.history.map(h=>`
+  <div class="history-row">
+   <span>${h.game}</span>
+   <span>${h.result==="win"?"✅":"❌"}</span>
+  </div>
+ `).join("");
+}
+
+function simpleGame(icon,name){
+ $("gameArea").innerHTML=`
+ <div class="game-title">
+  <h2>${icon} ${name}</h2>
+  <p class="muted">Game Mode Ready</p>
+ </div>
+ <div class="center">
+  <button class="btn" onclick="finishGame('win','Completed ${name}')">Complete Game</button>
+ </div>
+ `;
+}
+
+function gameWheel(){
+ let spinning=false;
+
+ $("gameArea").innerHTML=`
+ <div class="game-title">
+  <h2>🎡 Lucky Wheel</h2>
+  <p class="muted">Spin the wheel.</p>
+ </div>
+
+ <div class="wheel" id="wheel">
+  <span id="wheelText">SPIN</span>
+ </div>
+
+ <div class="center">
+  <p id="wheelStatus" class="muted">Ready</p>
+  <button class="btn" id="wheelBtn">🎡 SPIN NOW</button>
+ </div>
+ `;
+
+ $("wheelBtn").onclick=()=>{
+  if(spinning)return;
+
+  spinning=true;
+  $("wheelBtn").disabled=true;
+
+  const prizes=["1×","2×","5×","10×"];
+  const chosen=prizes[Math.floor(Math.random()*4)];
+  const index=prizes.indexOf(chosen);
+  const rotation=1800+(index*90)+45;
+
+  $("wheel").style.transform="rotate("+rotation+"deg)";
+  $("wheelStatus").textContent="Spinning...";
+
+  setTimeout(()=>{
+   $("wheelText").textContent=chosen;
+   $("wheelStatus").textContent="Result: "+chosen;
+
+   finishGame("win","Lucky Wheel: "+chosen);
+   showMessage("Wheel result: "+chosen);
+
+   spinning=false;
+   $("wheelBtn").disabled=false;
+  },3100);
+ };
+}
+
+function gameQuiz(){
+ const questions=[
+  ["India ki capital kya hai?",["Mumbai","New Delhi","Kolkata","Chennai"],1],
+  ["7 × 8 = ?",["54","56","64","48"],1],
+  ["Water ka chemical formula?",["CO2","O2","H2O","NaCl"],2],
+  ["Sun ek kya hai?",["Planet","Star","Moon","Comet"],1],
+  ["Earth kis galaxy mein hai?",["Andromeda","Milky Way","Whirlpool","Sombrero"],1]
+ ];
+
+ let index=0;
+ let score=0;
+
+ function draw(){
+  const q=questions[index];
+
+  $("gameArea").innerHTML=`
+   <div class="game-title">
+    <h2>🧠 Question Master</h2>
+    <p class="muted">Question ${index+1} / ${questions.length}</p>
+   </div>
+
+   <div class="result">
+    <div class="quiz-q">${q[0]}</div>
+   </div>
+
+   <div class="choice-grid">
+    ${q[1].map((x,i)=>`
+     <button class="choice" data-answer="${i}">${x}</button>
+    `).join("")}
+   </div>
+  `;
+
+  document.querySelectorAll("[data-answer]").forEach(btn=>{
+   btn.onclick=()=>{
+    const answer=Number(btn.dataset.answer);
+
+    if(answer===q[2]){
+     score++;
+     showMessage("Correct!");
+    }else{
+     showMessage("Wrong answer.");
+    }
+
+    index++;
+
+    if(index>=questions.length){
+     const win=score>=3;
+     finishGame(win?"win":"loss","Quiz score: "+score+"/"+questions.length);
+     $("gameArea").innerHTML=`
+      <div class="center">
+       <div class="big-number">${win?"🏆":"📚"}</div>
+       <h2>Quiz Finished</h2>
+      </div>
+     `;
+    }else{
+     draw();
+    }
+   };
+  });
+ }
+
+ draw();
+}
+
+function renderGame(fn){
+ if(fn==="wheel")return gameWheel();
+ if(fn==="quiz")return gameQuiz();
+ simpleGame(state.currentGame.icon,state.currentGame.name);
+}
+
+window.onload=load;
+</script>
+</body>
+</html>
